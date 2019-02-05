@@ -1,0 +1,27 @@
+﻿<Window x:Class="SectionalCropper.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SectionalCropper"
+        mc:Ignorable="d"
+        Title="Sectional Cropper" Height="350" Width="525">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button Content="Load" Width="100" Command="{Binding CommandLoad}"/>
+            <Button Content="Remove key" Width="100" Command="{Binding CommandRemoveKey}"/>
+            <Button Content="🠸🠸" Width="30" Command="{Binding CommandFirst}"/>
+            <Button Content="🠸" Width="30" Command="{Binding CommandPrevious}"/>
+            <Button Content="🠺" Width="30" Command="{Binding CommandNext}"/>
+            <Button Content="🠺🠺" Width="30" Command="{Binding CommandLast}"/>
+        </StackPanel>
+        <Image Grid.Row="1" Source="{Binding ImageSource}"/>
+        <Rectangle Grid.Row="1" Margin="{Binding RectangleMargin}"/>
+        <Rectangle Grid.Row="1" Margin="{Binding Pointer0Margin}" Fill="{Binding PointerColor}" PreviewMouseLeftButtonDown="Rectangle_PreviewMouseLeftButtonDown"  PreviewMouseLeftButtonUp="Rectangle_PreviewMouseLeftButtonUp"  PreviewMouseMove="Rectangle_PreviewMouseMove" Tag="0"/>
+        <Rectangle Grid.Row="1" Margin="{Binding Pointer1Margin}" Fill="{Binding PointerColor}" PreviewMouseLeftButtonDown="Rectangle_PreviewMouseLeftButtonDown"  PreviewMouseLeftButtonUp="Rectangle_PreviewMouseLeftButtonUp"  PreviewMouseMove="Rectangle_PreviewMouseMove" Tag="1"/>
+    </Grid>
+</Window>
