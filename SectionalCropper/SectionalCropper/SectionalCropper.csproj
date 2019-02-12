@@ -79,6 +79,7 @@
     </Compile>
     <Compile Include="Extensions\LINQExtension.cs" />
     <Compile Include="Models\Frame.cs" />
+    <Compile Include="Models\ImageControlInfo.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

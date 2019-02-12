@@ -1,7 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -11,16 +10,52 @@ namespace SectionalCropper.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         public RelayCommand CommandLoad { get; }
-        public RelayCommand CommandRemoveKey { get; }
+        public RelayCommand CommandKey { get; }
         public RelayCommand CommandFirst { get; }
         public RelayCommand CommandPrevious { get; }
         public RelayCommand CommandNext { get; }
         public RelayCommand CommandLast { get; }
         public string ImageSource => _currentFrame?.ImageSource;
-        public Thickness RectangleMargin => new Thickness(Pointer0Margin.Left, Pointer0Margin.Top, Pointer1Margin.Right, Pointer1Margin.Bottom);
-        public Thickness Pointer0Margin => _currentFrame?.Pointer0Margin ?? new Thickness(0.0);
-        public Thickness Pointer1Margin => _currentFrame?.Pointer1Margin ?? new Thickness(0.0);
-        public SolidColorBrush PointerColor => Brushes.Transparent;
+        public Thickness RectangleMargin => _currentFrame?.RectangleMargin ?? new Thickness(0.0);
+        public double Width { set => Models.ImageControlInfo.Width = value; }
+        public double Height { set => Models.ImageControlInfo.Height = value; }
+        public SolidColorBrush ButtonKeyBackground => _currentFrame != null && _currentFrame.IsKey ? Brushes.Green : Brushes.Gray;
+        public double RectangleLeft
+        {
+            get => _currentFrame?.Rectangle.Left ?? 0.0;
+            set
+            {
+                _currentFrame.SetRectangle(Models.Frame.RectangleVariables.Left, value);
+                RaisePropertyChanged(nameof(RectangleMargin));
+            }
+        }
+        public double RectangleTop
+        {
+            get => _currentFrame?.Rectangle.Top ?? 0.0;
+            set
+            {
+                _currentFrame.SetRectangle(Models.Frame.RectangleVariables.Top, value);
+                RaisePropertyChanged(nameof(RectangleMargin));
+            }
+        }
+        public double RectangleWidth
+        {
+            get => _currentFrame?.Rectangle.Width ?? 0.0;
+            set
+            {
+                _currentFrame.SetRectangle(Models.Frame.RectangleVariables.Width, value);
+                RaisePropertyChanged(nameof(RectangleMargin));
+            }
+        }
+        public double RectangleHeight
+        {
+            get => _currentFrame?.Rectangle.Height ?? 0.0;
+            set
+            {
+                _currentFrame.SetRectangle(Models.Frame.RectangleVariables.Height, value);
+                RaisePropertyChanged(nameof(RectangleMargin));
+            }
+        }
         public int CurrentIndex
         {
             get => Math.Min(Math.Max(0, _currentIndex), MaximumIndex);
@@ -39,13 +74,12 @@ namespace SectionalCropper.ViewModels
         {
             _dispatcher = dispatcher;
             CommandLoad = new RelayCommand(Load, true);
-            CommandRemoveKey = new RelayCommand(() =>
+            CommandKey = new RelayCommand(() =>
             {
                 if (_currentFrame == null) return;
-                _currentFrame.IsKey = false;
-                RaisePropertyChanged(nameof(Pointer0Margin));
-                RaisePropertyChanged(nameof(Pointer1Margin));
+                _currentFrame.IsKey = !_currentFrame.IsKey;
                 RaisePropertyChanged(nameof(RectangleMargin));
+                RaisePropertyChanged(nameof(ButtonKeyBackground));
             }, true);
             CommandFirst = new RelayCommand(() => CurrentIndex = 0, true);
             CommandPrevious = new RelayCommand(() => CurrentIndex--, true);
@@ -80,8 +114,11 @@ namespace SectionalCropper.ViewModels
         {
             RaisePropertyChanged(nameof(ImageSource));
             RaisePropertyChanged(nameof(RectangleMargin));
-            RaisePropertyChanged(nameof(Pointer0Margin));
-            RaisePropertyChanged(nameof(Pointer1Margin));
+            RaisePropertyChanged(nameof(RectangleLeft));
+            RaisePropertyChanged(nameof(RectangleTop));
+            RaisePropertyChanged(nameof(RectangleWidth));
+            RaisePropertyChanged(nameof(RectangleHeight));
+            RaisePropertyChanged(nameof(ButtonKeyBackground));
         }
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SectionalCropper"
         mc:Ignorable="d"
-        Title="Sectional Cropper" Height="350" Width="525">
+        Title="Sectional Cropper" Height="350" Width="1000">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="32"/>
@@ -13,15 +13,23 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <Button Content="Load" Width="100" Command="{Binding CommandLoad}"/>
-            <Button Content="Remove key" Width="100" Command="{Binding CommandRemoveKey}"/>
+            <Button Content="Key" Width="100" Command="{Binding CommandKey}" Background="{Binding ButtonKeyBackground}"/>
             <Button Content="🠸🠸" Width="30" Command="{Binding CommandFirst}"/>
             <Button Content="🠸" Width="30" Command="{Binding CommandPrevious}"/>
             <Button Content="🠺" Width="30" Command="{Binding CommandNext}"/>
             <Button Content="🠺🠺" Width="30" Command="{Binding CommandLast}"/>
         </StackPanel>
-        <Image Grid.Row="1" Source="{Binding ImageSource}"/>
-        <Rectangle Grid.Row="1" Margin="{Binding RectangleMargin}"/>
-        <Rectangle Grid.Row="1" Margin="{Binding Pointer0Margin}" Fill="{Binding PointerColor}" PreviewMouseLeftButtonDown="Rectangle_PreviewMouseLeftButtonDown"  PreviewMouseLeftButtonUp="Rectangle_PreviewMouseLeftButtonUp"  PreviewMouseMove="Rectangle_PreviewMouseMove" Tag="0"/>
-        <Rectangle Grid.Row="1" Margin="{Binding Pointer1Margin}" Fill="{Binding PointerColor}" PreviewMouseLeftButtonDown="Rectangle_PreviewMouseLeftButtonDown"  PreviewMouseLeftButtonUp="Rectangle_PreviewMouseLeftButtonUp"  PreviewMouseMove="Rectangle_PreviewMouseMove" Tag="1"/>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Label Content="Left" />
+            <TextBox Text="{Binding RectangleLeft, Mode=TwoWay}" Width="75"/>
+            <Label Content="Top" />
+            <TextBox Text="{Binding RectangleTop, Mode=TwoWay}" Width="75"/>
+            <Label Content="Width" />
+            <TextBox Text="{Binding RectangleWidth, Mode=TwoWay}" Width="75"/>
+            <Label Content="Height" />
+            <TextBox Text="{Binding RectangleHeight, Mode=TwoWay}" Width="75"/>
+        </StackPanel>
+        <Image Grid.Row="1" Source="{Binding ImageSource}" Width="{Binding Width, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}" Height="{Binding Height, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"/>
+        <Border Grid.Row="1" Margin="{Binding RectangleMargin}" BorderThickness="3" BorderBrush="Red"/>
     </Grid>
 </Window>
