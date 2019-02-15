@@ -8,28 +8,53 @@
         Title="Sectional Cropper" Height="350" Width="1000">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="32"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
+            <RowDefinition Height="32"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <Button Content="Load" Width="100" Command="{Binding CommandLoad}"/>
-            <Button Content="Key" Width="100" Command="{Binding CommandKey}" Background="{Binding ButtonKeyBackground}"/>
-            <Button Content="🠸🠸" Width="30" Command="{Binding CommandFirst}"/>
-            <Button Content="🠸" Width="30" Command="{Binding CommandPrevious}"/>
-            <Button Content="🠺" Width="30" Command="{Binding CommandNext}"/>
-            <Button Content="🠺🠺" Width="30" Command="{Binding CommandLast}"/>
-        </StackPanel>
-        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Label Content="Left" />
-            <TextBox Text="{Binding RectangleLeft, Mode=TwoWay}" Width="75"/>
-            <Label Content="Top" />
-            <TextBox Text="{Binding RectangleTop, Mode=TwoWay}" Width="75"/>
-            <Label Content="Width" />
-            <TextBox Text="{Binding RectangleWidth, Mode=TwoWay}" Width="75"/>
-            <Label Content="Height" />
-            <TextBox Text="{Binding RectangleHeight, Mode=TwoWay}" Width="75"/>
-        </StackPanel>
-        <Image Grid.Row="1" Source="{Binding ImageSource}" Width="{Binding Width, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}" Height="{Binding Height, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"/>
-        <Border Grid.Row="1" Margin="{Binding RectangleMargin}" BorderThickness="3" BorderBrush="Red"/>
+        <Menu Grid.Row="0">
+            <MenuItem Header="File">
+                <MenuItem Header="Load" Command="{Binding CommandLoad}"/>
+                <MenuItem Header="Output" Command="{Binding CommandOutput}"/>
+            </MenuItem>
+        </Menu>
+        <Canvas Grid.Row="1">
+            <Image Panel.ZIndex="0" Source="{Binding ImageSource}" Stretch="None" Canvas.Left="0" Canvas.Top="0"/>
+            <Rectangle Panel.ZIndex="3" StrokeThickness="2" Stroke="Red" Canvas.Left="{Binding RectangleLeft}" Canvas.Top="{Binding RectangleTop}" Width="{Binding RectangleWidth}" Height="{Binding RectangleHeight}" />
+        </Canvas>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Left">
+                <Button Content="Key" Width="100" Command="{Binding CommandKey}" Background="{Binding ButtonKeyBackground}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center">
+                <Button Content="🠸🠸" Width="30" Command="{Binding CommandFirst}"/>
+                <Button Content="🠸" Width="30" Command="{Binding CommandPrevious}"/>
+                <Button Content="🠺" Width="30" Command="{Binding CommandNext}"/>
+                <Button Content="🠺🠺" Width="30" Command="{Binding CommandLast}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Center">
+                <Label Content="Output width"  VerticalContentAlignment="Center"/>
+                <TextBox Text="{Binding OutputWidth, Mode=TwoWay}" Width="50" VerticalContentAlignment="Center"/>
+                <Label Content="Output height"  VerticalContentAlignment="Center"/>
+                <TextBox Text="{Binding OutputHeight, Mode=TwoWay}" Width="50" VerticalContentAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Column="3" HorizontalAlignment="Right">
+                <Label Content="Left"  VerticalContentAlignment="Center"/>
+                <TextBox Text="{Binding RectangleLeft, Mode=TwoWay}" Width="50" VerticalContentAlignment="Center"/>
+                <Label Content="Top"  VerticalContentAlignment="Center"/>
+                <TextBox Text="{Binding RectangleTop, Mode=TwoWay}" Width="50" VerticalContentAlignment="Center"/>
+                <Label Content="Width"  VerticalContentAlignment="Center"/>
+                <TextBox Text="{Binding RectangleWidth, Mode=TwoWay}" Width="50" VerticalContentAlignment="Center"/>
+                <Label Content="Height"  VerticalContentAlignment="Center"/>
+                <TextBox Text="{Binding RectangleHeight, Mode=TwoWay}" Width="50" VerticalContentAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+        
     </Grid>
 </Window>

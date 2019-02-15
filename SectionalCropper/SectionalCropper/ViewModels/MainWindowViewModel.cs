@@ -1,32 +1,30 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using System;
-using System.Windows;
 using System.Windows.Media;
-using System.Windows.Threading;
+using SectionalCropper.Controllers;
+using SectionalCropper.Models;
 
 namespace SectionalCropper.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
         public RelayCommand CommandLoad { get; }
+        public RelayCommand CommandOutput { get; }
         public RelayCommand CommandKey { get; }
         public RelayCommand CommandFirst { get; }
         public RelayCommand CommandPrevious { get; }
         public RelayCommand CommandNext { get; }
         public RelayCommand CommandLast { get; }
         public string ImageSource => _currentFrame?.ImageSource;
-        public Thickness RectangleMargin => _currentFrame?.RectangleMargin ?? new Thickness(0.0);
-        public double Width { set => Models.ImageControlInfo.Width = value; }
-        public double Height { set => Models.ImageControlInfo.Height = value; }
         public SolidColorBrush ButtonKeyBackground => _currentFrame != null && _currentFrame.IsKey ? Brushes.Green : Brushes.Gray;
         public double RectangleLeft
         {
             get => _currentFrame?.Rectangle.Left ?? 0.0;
             set
             {
-                _currentFrame.SetRectangle(Models.Frame.RectangleVariables.Left, value);
-                RaisePropertyChanged(nameof(RectangleMargin));
+                _currentFrame?.SetRectangle(Models.Frame.RectangleVariables.Left, value);
+                OnFrameChange();
             }
         }
         public double RectangleTop
@@ -35,7 +33,7 @@ namespace SectionalCropper.ViewModels
             set
             {
                 _currentFrame.SetRectangle(Models.Frame.RectangleVariables.Top, value);
-                RaisePropertyChanged(nameof(RectangleMargin));
+                OnFrameChange();
             }
         }
         public double RectangleWidth
@@ -44,7 +42,7 @@ namespace SectionalCropper.ViewModels
             set
             {
                 _currentFrame.SetRectangle(Models.Frame.RectangleVariables.Width, value);
-                RaisePropertyChanged(nameof(RectangleMargin));
+                OnFrameChange();
             }
         }
         public double RectangleHeight
@@ -53,32 +51,39 @@ namespace SectionalCropper.ViewModels
             set
             {
                 _currentFrame.SetRectangle(Models.Frame.RectangleVariables.Height, value);
-                RaisePropertyChanged(nameof(RectangleMargin));
+                OnFrameChange();
             }
         }
         public int CurrentIndex
         {
-            get => Math.Min(Math.Max(0, _currentIndex), MaximumIndex);
+            get => Math.Min(Math.Max(0, Frame.CurrentIndex), MaximumIndex);
             set
             {
-                _currentIndex = Math.Min(Math.Max(0, value), MaximumIndex);
+                Frame.CurrentIndex = Math.Min(Math.Max(0, value), MaximumIndex);
                 OnFrameChange();
             }
         }
-        public int MaximumIndex => Models.Frame.Frames?.Count - 1 ?? 0;
-        private Models.Frame _currentFrame => Models.Frame.Frames[CurrentIndex];
-        private int _currentIndex;
-        private readonly Dispatcher _dispatcher;
-
-        public MainWindowViewModel(Dispatcher dispatcher)
+        public int MaximumIndex => Frame.Frames?.Count - 1 ?? 0;
+        public int OutputWidth
         {
-            _dispatcher = dispatcher;
-            CommandLoad = new RelayCommand(Load, true);
+            get => OutputParameters.Width;
+            set => OutputParameters.Width = value;
+        }
+        public int OutputHeight
+        {
+            get => OutputParameters.Height;
+            set => OutputParameters.Height = value;
+        }
+        private Frame _currentFrame => CurrentIndex >= 0 && CurrentIndex < Frame.Frames.Count ? Frame.Frames[CurrentIndex] : null;
+
+        public MainWindowViewModel()
+        {
+            CommandLoad = new RelayCommand(() => { LoadController.Load(); OnFrameChange(); }, true);
+            CommandOutput = new RelayCommand(OutputController.Output, true);
             CommandKey = new RelayCommand(() =>
             {
                 if (_currentFrame == null) return;
                 _currentFrame.IsKey = !_currentFrame.IsKey;
-                RaisePropertyChanged(nameof(RectangleMargin));
                 RaisePropertyChanged(nameof(ButtonKeyBackground));
             }, true);
             CommandFirst = new RelayCommand(() => CurrentIndex = 0, true);
@@ -87,33 +92,9 @@ namespace SectionalCropper.ViewModels
             CommandLast = new RelayCommand(() => CurrentIndex = MaximumIndex, true);
         }
 
-        private void Load()
-        {
-            var inputDirectory = AppContext.BaseDirectory + @"input\";
-            if (!System.IO.Directory.Exists(inputDirectory))
-            {
-                try
-                {
-                    System.IO.Directory.CreateDirectory(inputDirectory);
-                }
-                catch (Exception)
-                {
-                    return;
-                }
-            }
-            Models.Frame.Frames?.Clear();
-            var files = System.IO.Directory.GetFiles(inputDirectory);
-            foreach (var file in files)
-            {
-                Models.Frame.Add(file);
-            }
-            CurrentIndex = 0;
-        }
-
         private void OnFrameChange()
         {
             RaisePropertyChanged(nameof(ImageSource));
-            RaisePropertyChanged(nameof(RectangleMargin));
             RaisePropertyChanged(nameof(RectangleLeft));
             RaisePropertyChanged(nameof(RectangleTop));
             RaisePropertyChanged(nameof(RectangleWidth));

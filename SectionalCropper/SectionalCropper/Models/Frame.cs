@@ -14,18 +14,19 @@ namespace SectionalCropper.Models
             Height
         }
 
-        internal static List<Frame> Frames;
+        internal static List<Frame> Frames = new List<Frame>();
+        internal static int CurrentIndex;
         internal int Index;
-        internal bool IsKey;
+        internal bool IsKey
+        {
+            get => Index == 0 || Index == Frames.Count - 1 || _isKey;
+            set => _isKey = value;
+        }
         internal string ImageSource;
         internal Rect Rectangle => IsKey ? _rectangle : GetRectangle();
-        internal double Top = 0.5;
-        internal double Width = 0.1;
-        internal double Height = 0.1;
-        internal Thickness RectangleMargin => new Thickness(Rectangle.Left * ImageControlInfo.Width, Rectangle.Top * ImageControlInfo.Height, ImageControlInfo.Width - (Rectangle.Left * ImageControlInfo.Width), ImageControlInfo.Height - (Rectangle.Top * ImageControlInfo.Height));
-        protected Thickness[] _margins;
         private Rect _rectangle;
-        
+        private bool _isKey;
+
         private Frame()
         {
             Index = Frames.Count;
@@ -33,10 +34,6 @@ namespace SectionalCropper.Models
 
         internal static void Add(string framePath)
         {
-            if (Frames == null)
-            {
-                Frames = new List<Frame>();
-            }
             var frame = new Frame();
             frame.ImageSource = framePath;
             Frames.Add(frame);
