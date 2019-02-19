@@ -14,12 +14,14 @@
         </Grid.RowDefinitions>
         <Menu Grid.Row="0">
             <MenuItem Header="File">
-                <MenuItem Header="Load" Command="{Binding CommandLoad}"/>
-                <MenuItem Header="Output" Command="{Binding CommandOutput}"/>
+                <MenuItem Header="Load images" Command="{Binding CommandLoadImages}"/>
+                <MenuItem Header="Load settings" Command="{Binding CommandLoadSettings}"/>
+                <MenuItem Header="Save settings" Command="{Binding CommandSaveSettings}"/>
+                <MenuItem Header="Output images" Command="{Binding CommandOutput}"/>
             </MenuItem>
         </Menu>
         <Canvas Grid.Row="1">
-            <Image Panel.ZIndex="0" Source="{Binding ImageSource}" Stretch="None" Canvas.Left="0" Canvas.Top="0"/>
+            <Image Panel.ZIndex="0" Source="{Binding ImageSource}" Stretch="None" Canvas.Left="0" Canvas.Top="0" PreviewMouseLeftButtonDown="Image_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Image_PreviewMouseLeftButtonUp"/>
             <Rectangle Panel.ZIndex="3" StrokeThickness="2" Stroke="Red" Canvas.Left="{Binding RectangleLeft}" Canvas.Top="{Binding RectangleTop}" Width="{Binding RectangleWidth}" Height="{Binding RectangleHeight}" />
         </Canvas>
         <Grid Grid.Row="2">

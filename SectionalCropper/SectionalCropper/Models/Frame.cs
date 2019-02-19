@@ -38,7 +38,7 @@ namespace SectionalCropper.Models
             frame.ImageSource = framePath;
             Frames.Add(frame);
         }
-        
+
         internal void SetRectangle(RectangleVariables variable, double value)
         {
             var left = variable == RectangleVariables.Left ? value : _rectangle.Left;
@@ -57,20 +57,20 @@ namespace SectionalCropper.Models
             if (frameMax == null) return frameMin.Rectangle;
             if (frameMin == null) return frameMax.Rectangle;
             var left = new List<WeightedItem> {
-                new WeightedItem{Value = frameMin.Rectangle.Left , Weight = Index - frameMin.Index },
-                new WeightedItem{Value = frameMax.Rectangle.Left , Weight = frameMax.Index - Index }
+                new WeightedItem{Value = frameMin.Rectangle.Left , Weight = frameMax.Index - Index },
+                new WeightedItem{Value = frameMax.Rectangle.Left , Weight = Index - frameMin.Index }
             }.WeightedAverage(x => x.Value, x => x.Weight);
             var top = new List<WeightedItem> {
-                new WeightedItem{Value = frameMin.Rectangle.Top , Weight = Index - frameMin.Index },
-                new WeightedItem{Value = frameMax.Rectangle.Top , Weight = frameMax.Index - Index }
+                new WeightedItem{Value = frameMin.Rectangle.Top ,  Weight = frameMax.Index - Index },
+                new WeightedItem{Value = frameMax.Rectangle.Top ,  Weight = Index - frameMin.Index }
             }.WeightedAverage(x => x.Value, x => x.Weight);
             var right = new List<WeightedItem> {
-                new WeightedItem{Value = frameMin.Rectangle.Width , Weight = Index - frameMin.Index },
-                new WeightedItem{Value = frameMax.Rectangle.Width , Weight = frameMax.Index - Index }
+                new WeightedItem{Value = frameMin.Rectangle.Width ,  Weight = frameMax.Index - Index },
+                new WeightedItem{Value = frameMax.Rectangle.Width ,  Weight = Index - frameMin.Index }
             }.WeightedAverage(x => x.Value, x => x.Weight);
             var bottom = new List<WeightedItem> {
-                new WeightedItem{Value = frameMin.Rectangle.Height , Weight = Index - frameMin.Index },
-                new WeightedItem{Value = frameMax.Rectangle.Height , Weight = frameMax.Index - Index }
+                new WeightedItem{Value = frameMin.Rectangle.Height , Weight = frameMax.Index - Index },
+                new WeightedItem{Value = frameMax.Rectangle.Height , Weight = Index - frameMin.Index }
             }.WeightedAverage(x => x.Value, x => x.Weight);
             return new Rect(left, top, right, bottom);
         }
@@ -80,6 +80,6 @@ namespace SectionalCropper.Models
             public double Value;
             public double Weight;
         }
-        
+
     }
 }

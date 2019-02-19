@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace SectionalCropper.Views
 {
@@ -14,6 +15,16 @@ namespace SectionalCropper.Views
         {
             InitializeComponent();
             DataContext = _viewModel = new ViewModels.MainWindowViewModel();
+        }
+
+        private void Image_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            _viewModel.MouseDown(e.GetPosition((Image)sender));
+        }
+
+        private void Image_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            _viewModel.MouseUp(e.GetPosition((Image)sender));
         }
     }
 }

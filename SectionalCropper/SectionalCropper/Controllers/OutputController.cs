@@ -10,12 +10,12 @@ namespace SectionalCropper.Controllers
     {
         internal static void Output()
         {
-            var outputDirectory = AppContext.BaseDirectory + @"output\";
+            var outputDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\SectionalCropper\output\";
             DirectoryController.CreateIfMissing(outputDirectory);
             foreach (var frame in Frame.Frames)
             {
                 var bmpInput = new Bitmap(frame.ImageSource);
-                bmpInput = bmpInput.Clone(new Rectangle(Convert.ToInt32(frame.Rectangle.Left), Convert.ToInt32(frame.Rectangle.Top), Convert.ToInt32(frame.Rectangle.Width), Convert.ToInt32(frame.Rectangle.Height)), PixelFormat.DontCare);
+                bmpInput = bmpInput.Clone(new Rectangle(Convert.ToInt32(frame.Rectangle.Left), Convert.ToInt32(frame.Rectangle.Top), Convert.ToInt32(frame.Rectangle.Width), Convert.ToInt32(frame.Rectangle.Height)), PixelFormat.Undefined);
                 var brush = new SolidBrush(Color.Fuchsia);
                 var scale = Math.Min(Convert.ToDouble(OutputParameters.Width) / Convert.ToDouble(bmpInput.Width), Convert.ToDouble(OutputParameters.Height) / Convert.ToDouble(bmpInput.Height));
                 var bmpOutput = new Bitmap(OutputParameters.Width, OutputParameters.Height);
@@ -28,6 +28,8 @@ namespace SectionalCropper.Controllers
                 graph.FillRectangle(brush, new RectangleF(0, 0, OutputParameters.Width, OutputParameters.Height));
                 graph.DrawImage(bmpInput, (OutputParameters.Width - scaleWidth) / 2, (OutputParameters.Height - scaleHeight) / 2, scaleWidth, scaleHeight);
                 bmpOutput.Save(outputDirectory + $"{frame.Index}.png", ImageFormat.Png);
+                bmpInput.Dispose();
+                bmpOutput.Dispose();
             }
         }
     }

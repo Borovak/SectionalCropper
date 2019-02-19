@@ -4,12 +4,15 @@ using System;
 using System.Windows.Media;
 using SectionalCropper.Controllers;
 using SectionalCropper.Models;
+using System.Windows;
 
 namespace SectionalCropper.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        public RelayCommand CommandLoad { get; }
+        public RelayCommand CommandLoadImages { get; }
+        public RelayCommand CommandLoadSettings { get; }
+        public RelayCommand CommandSaveSettings { get; }
         public RelayCommand CommandOutput { get; }
         public RelayCommand CommandKey { get; }
         public RelayCommand CommandFirst { get; }
@@ -78,7 +81,9 @@ namespace SectionalCropper.ViewModels
 
         public MainWindowViewModel()
         {
-            CommandLoad = new RelayCommand(() => { LoadController.Load(); OnFrameChange(); }, true);
+            CommandLoadImages = new RelayCommand(() => { LoadImagesController.Load(); OnFrameChange(); }, true);
+            CommandLoadSettings = new RelayCommand(() => { LoadSettingsController.Load(); OnFrameChange(); }, true);
+            CommandSaveSettings = new RelayCommand(() => { SaveSettingsController.Save(); }, true);
             CommandOutput = new RelayCommand(OutputController.Output, true);
             CommandKey = new RelayCommand(() =>
             {
@@ -100,6 +105,23 @@ namespace SectionalCropper.ViewModels
             RaisePropertyChanged(nameof(RectangleWidth));
             RaisePropertyChanged(nameof(RectangleHeight));
             RaisePropertyChanged(nameof(ButtonKeyBackground));
+        }
+
+        private Point _mouseDownPoint;
+
+        internal void MouseDown(Point p)
+        {
+            _mouseDownPoint = p;
+        }
+
+        internal void MouseUp(Point p)
+        {
+            _currentFrame.IsKey = true;
+            _currentFrame.SetRectangle(Frame.RectangleVariables.Left, _mouseDownPoint.X);
+            _currentFrame.SetRectangle(Frame.RectangleVariables.Top, _mouseDownPoint.Y);
+            _currentFrame.SetRectangle(Frame.RectangleVariables.Width, p.X - _mouseDownPoint.X);
+            _currentFrame.SetRectangle(Frame.RectangleVariables.Height, p.Y - _mouseDownPoint.Y);
+            OnFrameChange();
         }
     }
 }
